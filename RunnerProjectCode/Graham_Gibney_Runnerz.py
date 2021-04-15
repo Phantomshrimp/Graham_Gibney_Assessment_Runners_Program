@@ -1,6 +1,14 @@
+# Name: Graham Gibney
+# SID: R00206659
+# Group DY
+# Runner's Project - Semester 2
+
+# use validation functions when getting a choice
 import runnerFunctions
 
+# simple function to display the Main Menu only
 def displayMenu():
+    # fancy format when everything is confirmed working
     print()
     print("Main Menu")
     print("=" * 9)
@@ -13,11 +21,14 @@ def displayMenu():
     print("7. Quit")
 
 
+# get the user's choice from the main menu - with validation from imported function
+# making use of the between 1 and 7 choice validation
 def mainMenuChoice():
     main_choice = runnerFunctions.get_choice_1_7("Please enter your choice: ")
     return main_choice
 
-
+# pass the user's choice into this function to perform the relative menu action
+# current variation is to debug/make sure the choice does something ****
 def performMainChoice(main_menu_choice):
     if main_menu_choice == 1:
         print("1")
@@ -35,11 +46,16 @@ def performMainChoice(main_menu_choice):
         print("Thanks")
 
 
+# the main function to hold all separate functions
 def main():
+    # display the Main Menu to the User
     displayMenu()
+    # get the user's choice
     main_menu_choice = mainMenuChoice()
+    # act on that main menu choice
     performMainChoice(main_menu_choice)
 
 
+# main function
 if __name__ == '__main__':
     main()
