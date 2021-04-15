@@ -12,8 +12,14 @@ def displayMenu():
     print("6. Show all competitors who have won a race")
     print("7. Quit")
 
+
+def mainMenuChoice():
+    main_choice = runnerFunctions.get_choice_1_7("Please enter your choice: ")
+    return main_choice
+
 def main():
     displayMenu()
+    main_menu_choice = mainMenuChoice()
 
 
 if __name__ == '__main__':
