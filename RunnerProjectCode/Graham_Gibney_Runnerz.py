@@ -27,11 +27,39 @@ def mainMenuChoice():
     main_choice = runnerFunctions.get_choice_1_7("Please enter your choice: ")
     return main_choice
 
+
+def race_selection_menu():
+    print()
+    print("Pick a race to review: ")
+    print("1: Currabinny")
+    print("2: Glengarriff")
+
+
+def race_menu_choice():
+    race_choice = runnerFunctions.get_choice_1_2("Please enter the race results you want to see: ")
+    return race_choice
+
+
+def perform_race_choice(race_choice):
+    if race_choice == 1:
+        connection = open("currabinny.txt")
+        results = connection.read()
+        print(results)
+    else:
+        connection = open("glengarriff.txt")
+        results = connection.read()
+        print(results)
+
+def act_on_opt1():
+    race_selection_menu()
+    race_choice = race_menu_choice()
+    perform_race_choice(race_choice)
+
 # pass the user's choice into this function to perform the relative menu action
 # current variation is to debug/make sure the choice does something ****
 def performMainChoice(main_menu_choice):
     if main_menu_choice == 1:
-        print("1")
+        act_on_opt1()
     elif main_menu_choice == 2:
         print("2")
     elif main_menu_choice == 3:
@@ -54,6 +82,7 @@ def main():
     main_menu_choice = mainMenuChoice()
     # act on that main menu choice
     performMainChoice(main_menu_choice)
+
 
 
 # main function
