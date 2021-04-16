@@ -39,7 +39,7 @@ def get_choice_1_7(prompt):
 
 
 # specifically designed to get a choice from the main menu
-# 7 choices
+# 2 choices
 def get_choice_1_2(prompt):
     while True:
         try:
