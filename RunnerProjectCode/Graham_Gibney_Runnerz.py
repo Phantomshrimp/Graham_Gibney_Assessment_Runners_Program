@@ -114,9 +114,6 @@ def main():
     # Turn Runners.txt into 2 lists
     runner_file = 'Runners.txt'
     runner_names, runner_ids = split_to_two_lists(runner_file)
-    print(runner_names)
-    print(runner_ids)
-
     # display the Main Menu to the User
     display_menu()
     # # get the user's choice
