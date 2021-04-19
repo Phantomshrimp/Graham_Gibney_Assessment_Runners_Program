@@ -31,9 +31,13 @@ def main_menu_choice():
 
 # pass the user's choice into this function to perform the relative menu action
 # current variation is to debug/make sure the choice does something ****
-def perform_main_choice(main_choice):
+def perform_main_choice(main_choice, race_list):
+    # # act on that main menu choice
     if main_choice == 1:
-        choose_race()
+        # iterate through the race list until the index matching choice-1 is found
+        which_race = choose_race(race_list)
+        # open the file that matches the string pulled from race_lsit with a littel lower formatting
+        open_file(which_race, race_list)
     elif main_choice == 2:
         print("2")
     elif main_choice == 3:
@@ -48,6 +52,8 @@ def perform_main_choice(main_choice):
         print("Thanks")
 
 
+# open the Races.txt file
+# pass the lines through to Make the files into a list function
 def read_venues(race_file):
     connection = open(race_file)
     lines = connection.readlines()
@@ -55,6 +61,8 @@ def read_venues(race_file):
     return lines
 
 
+# turn the Races.txt file into a list of strings
+# these strings will be manipulated to pull the correct race info
 def make_the_list(lines):
     race_list = []
     for line in lines:
@@ -62,6 +70,7 @@ def make_the_list(lines):
     return race_list
 
 
+# split the Runners file into a  Names list and ID list
 def split_to_two_lists(runner_file):
     connection = open(runner_file)
     names = []
@@ -76,6 +85,7 @@ def split_to_two_lists(runner_file):
     return names, ids
 
 
+# split the selected race text file into runner ids list and a times list
 def split_races_two_lists(file):
     ids = []
     times = []
@@ -89,30 +99,41 @@ def split_races_two_lists(file):
     return ids, times
 
 
-def choose_race():
+# get the user to choose a read_venues
+# menu printed iterates throug the newly created
+# race venue list
+def choose_race(race_list):
     print()
     print("Choose: ")
-    print('1. Currabinny')
-    print('2. Glengarriff')
+    num = 1
+    for i in range(len(race_list)):
+        print(f"{num}. {race_list[i]}")
+        num = num + 1
     choice = int(input("Please enter a choice: "))
     return choice
 
 
+# open the correct file based on the integer choice from the user
 def open_file(choice, race_list):
+    # the title of the file will be pulled from the race_list
+    # if the string in an index slot matches the string pulled from race_list
+    # then open that file
     title = ''
     choice = choice - 1
-    # print("TEST 1:", race_list)
     for i in range(len(race_list)):
         if i == choice:
             title = (race_list[i]).lower()
     file = open("{}.txt".format(title))
+    # with the venue results open, split the two entries to runners and times
     ids, times = split_races_two_lists(file)
+    # convert the seconds listed into minutes and seconds
     minutes = []
     seconds = []
     times = [float(y) for y in times]
     for m in range(len(times)):
         minutes.append(int(times[m] // 60))
         seconds.append(float(times[m] % 60))
+    # print the results and the winners
     print()
     print(f"Results for {title.capitalize()}")
     print("=" * 25)
@@ -138,11 +159,7 @@ def main():
     display_menu()
     # # get the user's choice
     menu_choice = main_menu_choice()
-    # # act on that main menu choice
-    perform_main_choice(menu_choice)
-    which_race = choose_race()
-    open_file(which_race, race_list)
-
+    perform_main_choice(menu_choice, race_list)
 
 
 # main function
