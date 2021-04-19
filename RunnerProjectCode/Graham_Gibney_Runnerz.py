@@ -76,7 +76,21 @@ def split_to_two_lists(runner_file):
     return names, ids
 
 
+def split_races_two_lists(file):
+    ids = []
+    times = []
+    while True:
+        line = file.readline()
+        if line == '':
+            break
+        line_list = line.rsplit(',')
+        ids.append(line_list[0])
+        times.append(line_list[1].rstrip())
+    return ids, times
+
+
 def choose_race():
+    print()
     print("Choose: ")
     print('1. Currabinny')
     print('2. Glengarriff')
@@ -86,13 +100,29 @@ def choose_race():
 
 def open_file(choice, race_list):
     title = ''
-    print("TEST 1:", race_list)
+    choice = choice - 1
+    # print("TEST 1:", race_list)
     for i in range(len(race_list)):
         if i == choice:
             title = (race_list[i]).lower()
-    print("TEST 2:", title)
     file = open("{}.txt".format(title))
-    print("TEST 3:", file.read())
+    ids, times = split_races_two_lists(file)
+    minutes = []
+    seconds = []
+    times = [float(y) for y in times]
+    for m in range(len(times)):
+        minutes.append(int(times[m] // 60))
+        seconds.append(float(times[m] % 60))
+    print()
+    print(f"Results for {title.capitalize()}")
+    print("=" * 25)
+    for t in range(len(ids)):
+        print(f"{ids[t]} {' ' * 5} {minutes[t]} mins {seconds[t]:.0f} seconds.")
+    print()
+    winner = min(times)
+    for q in range(len(times)):
+        if times[q] == winner:
+            print(f"{ids[q]} won the race!")
 
 
 # the main function to hold all separate functions
@@ -112,6 +142,7 @@ def main():
     perform_main_choice(menu_choice)
     which_race = choose_race()
     open_file(which_race, race_list)
+
 
 
 # main function
