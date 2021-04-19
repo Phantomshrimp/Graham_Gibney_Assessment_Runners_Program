@@ -29,49 +29,20 @@ def main_menu_choice():
     return main_choice
 
 
-def race_selection_menu():
-    print()
-    print("Pick a race to review: ")
-    print("1: Currabinny")
-    print("2: Glengarriff")
-
-
-def race_menu_choice():
-    race_choice = runnerFunctions.get_choice_1_2("Please enter the race results you want to see: ")
-    return race_choice
-
-
-def perform_race_choice(race_choice):
-    if race_choice == 1:
-        connection = open("currabinny.txt")
-        results = connection.read()
-        print(results)
-    else:
-        connection = open("glengarriff.txt")
-        results = connection.read()
-        print(results)
-
-
-def act_on_opt1():
-    race_selection_menu()
-    race_choice = race_menu_choice()
-    perform_race_choice(race_choice)
-
-
 # pass the user's choice into this function to perform the relative menu action
 # current variation is to debug/make sure the choice does something ****
-def perform_main_choice(main_menu_choice):
-    if main_menu_choice == 1:
-        act_on_opt1()
-    elif main_menu_choice == 2:
+def perform_main_choice(main_choice):
+    if main_choice == 1:
+        choose_race()
+    elif main_choice == 2:
         print("2")
-    elif main_menu_choice == 3:
+    elif main_choice == 3:
         print("3")
-    elif main_menu_choice == 4:
+    elif main_choice == 4:
         print("4")
-    elif main_menu_choice == 5:
+    elif main_choice == 5:
         print("5")
-    elif main_menu_choice == 6:
+    elif main_choice == 6:
         print("6")
     else:
         print("Thanks")
@@ -105,6 +76,25 @@ def split_to_two_lists(runner_file):
     return names, ids
 
 
+def choose_race():
+    print("Choose: ")
+    print('1. Currabinny')
+    print('2. Glengarriff')
+    choice = int(input("Please enter a choice: "))
+    return choice
+
+
+def open_file(choice, race_list):
+    title = ''
+    print("TEST 1:", race_list)
+    for i in range(len(race_list)):
+        if i == choice:
+            title = (race_list[i]).lower()
+    print("TEST 2:", title)
+    file = open("{}.txt".format(title))
+    print("TEST 3:", file.read())
+
+
 # the main function to hold all separate functions
 def main():
     # Turn Races.txt into a string list
@@ -120,6 +110,8 @@ def main():
     menu_choice = main_menu_choice()
     # # act on that main menu choice
     perform_main_choice(menu_choice)
+    which_race = choose_race()
+    open_file(which_race, race_list)
 
 
 # main function
