@@ -6,13 +6,16 @@
 # use validation functions when getting a choice
 import runnerFunctions
 
+def print_banner():
+    print('=' * 20)
+
 
 # simple function to display the Main Menu only
 def display_menu():
     # fancy format when everything is confirmed working
     print()
     print("Main Menu")
-    print("=" * 9)
+    print_banner()
     print("1. Show the results for a race")
     print("2. Add the results for a race")
     print("3. Show all competitors by country")
@@ -29,9 +32,38 @@ def main_menu_choice():
     return main_choice
 
 
+def get_race_venue():
+    new_venue = input("Where was the race held: ").capitalize()
+    return new_venue
+
+
+def get_runner_times(runner_ids, new_venue):
+    print_banner()
+    print("Please enter the runner's time in seconds: ")
+    print("*** If a runner did not take part, please enter 0 as their time ***")
+    print_banner()
+    new_file = open("{}.txt".format(new_venue.lower()), 'w')
+    for i in range(len(runner_ids)):
+        times = int(input(f"Time for {runner_ids[i]}: "))
+        if times != 0:
+            new_file.write(f"{runner_ids[i]},{times}\n")
+
+
+def check_for_same_race(new_venue, race_list, runner_ids):
+    while True:
+        if new_venue in race_list:
+            print('A file already exists for this race')
+            new_venue = get_race_venue()
+        else:
+            get_runner_times(runner_ids, new_venue)
+            race_list.append(new_venue)
+            print(race_list)
+            break
+
+
 # pass the user's choice into this function to perform the relative menu action
 # current variation is to debug/make sure the choice does something ****
-def perform_main_choice(main_choice, race_list):
+def perform_main_choice(main_choice, race_list, runner_ids):
     # # act on that main menu choice
     if main_choice == 1:
         # iterate through the race list until the index matching choice-1 is found
@@ -39,7 +71,8 @@ def perform_main_choice(main_choice, race_list):
         # open the file that matches the string pulled from race_lsit with a littel lower formatting
         open_file(which_race, race_list)
     elif main_choice == 2:
-        print("2")
+        new_venue = get_race_venue()
+        check_for_same_race(new_venue, race_list, runner_ids)
     elif main_choice == 3:
         print("3")
     elif main_choice == 4:
@@ -48,8 +81,6 @@ def perform_main_choice(main_choice, race_list):
         print("5")
     elif main_choice == 6:
         print("6")
-    else:
-        print("Thanks")
 
 
 # open the Races.txt file
@@ -109,7 +140,7 @@ def choose_race(race_list):
     for i in range(len(race_list)):
         print(f"{num}. {race_list[i]}")
         num = num + 1
-    choice = int(input("Please enter a choice: "))
+    choice = runnerFunctions.get_integer_choice(f"Please enter a choice: ")
     return choice
 
 
@@ -156,10 +187,14 @@ def main():
     runner_file = 'Runners.txt'
     runner_names, runner_ids = split_to_two_lists(runner_file)
     # display the Main Menu to the User
-    display_menu()
-    # # get the user's choice
-    menu_choice = main_menu_choice()
-    perform_main_choice(menu_choice, race_list)
+    while True:
+        display_menu()
+        # # get the user's choice
+        menu_choice = main_menu_choice()
+        perform_main_choice(menu_choice, race_list, runner_ids)
+        if menu_choice == 7:
+            print('Thank you!')
+            break
 
 
 # main function
