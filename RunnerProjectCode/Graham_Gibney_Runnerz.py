@@ -79,20 +79,43 @@ def sort_runners(runner_ids, runner_names):
     cork = ""
     kerry = ""
     cork_initials = 'CK'
-    kerry_initials = 'KY'
+    # f3:: iterate through the id list
     for i in range(len(runner_ids)):
+        # f3:: if index contains 'CK' add it to the Cork string
         if cork_initials in runner_ids[i]:
-            cork = cork + f"{runner_names[i]:15s} ({runner_ids[i]}) \n"
+            cork = cork + f"{runner_names[i]:10s} ({runner_ids[i]}) \n"
+        # f3:: otherwise add it to the Kerry string
         else:
-            kerry = kerry + f"{runner_names[i]:15s} ({runner_ids[i]}) \n"
+            kerry = kerry + f"{runner_names[i]:10s} ({runner_ids[i]}) \n"
+    # f3:: table time!
     print()
     print("The Cork Runners are: ")
     print_banner()
     print(cork)
     print("The Kerry Runners are: ")
     print_banner()
-    print("Kerry")
     print(kerry)
+
+
+def get_winners(race_list):
+    # the title of the file will be pulled from the race_list
+    # if the string in an index slot matches the string pulled from race_list
+    # then open that file
+    print()
+    print("Venue", ' ' * 5,  "Winner")
+    print_banner()
+    title = ''
+    for i in range(len(race_list)):
+        title = (race_list[i]).lower()
+        file = open("{}.txt".format(title))
+        # with the venue results open, split the two entries to runners and times
+        ids, times = split_races_two_lists(file)
+        # convert the seconds listed into minutes and seconds
+        winner = min(times)
+        for q in range(len(times)):
+            if times[q] == winner:
+                print(f"{title.capitalize():13s} {ids[q]}")
+        print(times)
 
 
 # main:: pass the user's choice into this function to perform the relative menu action
@@ -112,7 +135,7 @@ def perform_main_choice(main_choice, race_list, runner_ids, race_file_data, runn
     elif main_choice == 3:
         sort_runners(runner_ids, runner_names)
     elif main_choice == 4:
-        print("4")
+        get_winners(race_list)
     elif main_choice == 5:
         print("5")
     elif main_choice == 6:
