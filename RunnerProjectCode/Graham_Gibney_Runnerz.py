@@ -6,6 +6,8 @@
 # use validation functions when getting a choice
 import runnerFunctions
 
+
+# decoration
 def print_banner():
     print('=' * 20)
 
@@ -32,38 +34,49 @@ def main_menu_choice():
     return main_choice
 
 
+# f2:: get the race venue from teh user
 def get_race_venue():
     new_venue = input("Where was the race held: ").capitalize()
     return new_venue
 
 
-def get_runner_times(runner_ids, new_venue):
+# f2:: get the race times for the new venue
+def get_runner_times(runner_ids, new_venue, race_file_data):
     print_banner()
     print("Please enter the runner's time in seconds: ")
     print("*** If a runner did not take part, please enter 0 as their time ***")
     print_banner()
+    # a new file with the title of the venue is created
     new_file = open("{}.txt".format(new_venue.lower()), 'w')
     for i in range(len(runner_ids)):
         times = int(input(f"Time for {runner_ids[i]}: "))
+        # once times are entered, any time > 0 is added to the file
         if times != 0:
             new_file.write(f"{runner_ids[i]},{times}\n")
 
 
-def check_for_same_race(new_venue, race_list, runner_ids):
+# f2:: check to see if the race has been recorded already
+def check_for_same_race(new_venue, race_list, runner_ids, race_file_data):
     while True:
         if new_venue in race_list:
             print('A file already exists for this race')
             new_venue = get_race_venue()
         else:
-            get_runner_times(runner_ids, new_venue)
-            race_list.append(new_venue)
-            print(race_list)
+            # f2:: if the race has not been recorded
+            # print out the list of runners and get their times
+            get_runner_times(runner_ids, new_venue, race_file_data)
+            # f2:: if the race has not been recorded
+            # f2:: add that venue to the race_list
+            race_file_data.write(f'\n{new_venue}')
+
+            # race_list.append(new_venue)
+            # print(race_list)
             break
 
 
 # pass the user's choice into this function to perform the relative menu action
 # current variation is to debug/make sure the choice does something ****
-def perform_main_choice(main_choice, race_list, runner_ids):
+def perform_main_choice(main_choice, race_list, runner_ids, race_file_data):
     # # act on that main menu choice
     if main_choice == 1:
         # iterate through the race list until the index matching choice-1 is found
@@ -71,8 +84,9 @@ def perform_main_choice(main_choice, race_list, runner_ids):
         # open the file that matches the string pulled from race_lsit with a littel lower formatting
         open_file(which_race, race_list)
     elif main_choice == 2:
+        # split across f2 functions
         new_venue = get_race_venue()
-        check_for_same_race(new_venue, race_list, runner_ids)
+        check_for_same_race(new_venue, race_list, runner_ids, race_file_data)
     elif main_choice == 3:
         print("3")
     elif main_choice == 4:
@@ -181,6 +195,7 @@ def open_file(choice, race_list):
 def main():
     # Turn Races.txt into a string list
     race_file = 'Races.txt'
+    race_file_data = open('Races.txt', 'a')
     lines = read_venues(race_file)
     race_list = make_the_list(lines)
     # Turn Runners.txt into 2 lists
@@ -191,7 +206,7 @@ def main():
         display_menu()
         # # get the user's choice
         menu_choice = main_menu_choice()
-        perform_main_choice(menu_choice, race_list, runner_ids)
+        perform_main_choice(menu_choice, race_list, runner_ids, race_file_data)
         if menu_choice == 7:
             print('Thank you!')
             break
