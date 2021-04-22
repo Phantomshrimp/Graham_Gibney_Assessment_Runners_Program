@@ -68,9 +68,6 @@ def check_for_same_race(new_venue, race_list, runner_ids, race_file_data):
             # f2:: if the race has not been recorded
             # f2:: add that venue to the race_list
             race_file_data.write(f'\n{new_venue}')
-
-            # race_list.append(new_venue)
-            # print(race_list)
             break
 
 
@@ -142,7 +139,6 @@ def perform_main_choice(main_choice, race_list, runner_ids, race_file_data, runn
         check_presence(user_runner, race_list)
     elif main_choice == 6:
         get_all_winners(race_list, runner_names, runner_ids)
-        print("6")
 
 
 # f6:: making use of the already split Races.txt and Runners.txt
@@ -169,6 +165,9 @@ def get_all_winners(race_list, runner_names, runner_ids):
     # f6:: remove any duplicate winners
     no_dupes_list = []
     [no_dupes_list.append(x) for x in winner_circle if x not in no_dupes_list]
+    print()
+    print("Winners Circle:")
+    print_banner()
     for d in range(len(no_dupes_list)):
         print(no_dupes_list[d])
 
@@ -333,3 +332,11 @@ def main():
 # main function
 if __name__ == '__main__':
     main()
+
+# TODO: confirm all functions are working correctly
+# TODO: trim the program but splitting large functions into smaller functions
+# TODO: move repeated functions into the useful_functions holder
+# TODO: add validation where missing, some user choices need to be customized
+# TODO: check comments
+# TODO: accurately place todos to be functional
+# TODO: add first of x when showing the winner of each race (option 4)
