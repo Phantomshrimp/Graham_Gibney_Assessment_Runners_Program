@@ -141,7 +141,36 @@ def perform_main_choice(main_choice, race_list, runner_ids, race_file_data, runn
         user_runner = pick_a_racer(runner_names, runner_ids)
         check_presence(user_runner, race_list)
     elif main_choice == 6:
+        get_all_winners(race_list, runner_names, runner_ids)
         print("6")
+
+
+# f6:: making use of the already split Races.txt and Runners.txt
+def get_all_winners(race_list, runner_names, runner_ids):
+    # f6:: get an empty list ready to catch the winners
+    winner_circle = []
+    # f6:: pull out the winning runned ID from every race
+    for i in range(len(race_list)):
+        # f5:: iterate through the race_list and open every file with a respective title
+        # recycling the already inputed split_races_two_lists function
+        title = (race_list[i]).lower()
+        file = open("{}.txt".format(title))
+        ids, times = split_races_two_lists(file)
+        winner = min(times)
+        for q in range(len(times)):
+            if times[q] == winner:
+                # f6:: getting something to reference in the ID and Names list
+                run_id = ids[q]
+                # f6:: iterate through the runner ids list with the winning id
+                for r in range(len(runner_ids)):
+                    if runner_ids[r] == run_id:
+                        # f6:: prep the list to print the format wanted to give the user
+                        winner_circle.append(f"{run_id} - {runner_names[r]} ({runner_ids[r]})")
+    # f6:: remove any duplicate winners
+    no_dupes_list = []
+    [no_dupes_list.append(x) for x in winner_circle if x not in no_dupes_list]
+    for d in range(len(no_dupes_list)):
+        print(no_dupes_list[d])
 
 
 def pick_a_racer(runner_names, runner_ids):
@@ -228,7 +257,7 @@ def split_races_two_lists(file):
             break
         line_list = line.rsplit(',')
         ids.append(line_list[0])
-        times.append(line_list[1].rstrip())
+        times.append(int(line_list[1].rstrip()))
     return ids, times
 
 
