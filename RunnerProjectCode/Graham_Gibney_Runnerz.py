@@ -340,3 +340,4 @@ if __name__ == '__main__':
 # TODO: check comments
 # TODO: accurately place todos to be functional
 # TODO: add first of x when showing the winner of each race (option 4)
+# TODO: close files
