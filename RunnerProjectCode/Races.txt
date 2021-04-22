@@ -2,5 +2,4 @@ Currabinny
 Glengarriff
 Bishopstown
 Moon
-Sun
 Town

@@ -9,7 +9,7 @@ import runnerFunctions
 
 # universal:: decoration
 def print_banner():
-    print('=' * 20)
+    print('=' * 25)
 
 
 # main:: simple function to display the Main Menu only
@@ -115,7 +115,6 @@ def get_winners(race_list):
         for q in range(len(times)):
             if times[q] == winner:
                 print(f"{title.capitalize():13s} {ids[q]}")
-        print(times)
 
 
 # main:: pass the user's choice into this function to perform the relative menu action
@@ -137,9 +136,53 @@ def perform_main_choice(main_choice, race_list, runner_ids, race_file_data, runn
     elif main_choice == 4:
         get_winners(race_list)
     elif main_choice == 5:
-        print("5")
+        print()
+        print_banner()
+        user_runner = pick_a_racer(runner_names, runner_ids)
+        check_presence(user_runner, race_list)
     elif main_choice == 6:
         print("6")
+
+
+def pick_a_racer(runner_names, runner_ids):
+    print("Choose a runner to see their times: ")
+    # f5:: start a count to display runners and a number to select them
+    count = 1
+    for i in range(len(runner_names)):
+        print(f"{count}. {runner_names[i]:15s} ({runner_ids[i]}) ")
+        count = count+1
+    choice = int(input("Runner: "))
+    # f5:: reset choice to 0 to iterate through a string
+    choice = choice - 1
+    # f5:: setting up a string to receive the runner ID
+    wordy_choice =""
+    for w in range(len(runner_ids)):
+        if w == choice:
+            wordy_choice = runner_ids[w]
+    return wordy_choice
+
+
+def check_presence(wordy_choice, race_list):
+    # the title of the file will be pulled from the race_list
+    # if the string in an index slot matches the string pulled from race_list
+    # then open that file
+    title = ''
+    print("Venue", " " * 9, "Time")
+    print_banner()
+    for i in range(len(race_list)):
+        # f5:: iterate through the race_list and open every file with a respective title
+        title = (race_list[i]).lower()
+        file = open("{}.txt".format(title))
+        # f5:: check whether or not the player id is in the file
+        for line in file:
+            if wordy_choice in line:
+                # f5:: if the id is in the file, strip everything but the seconds
+                line = line.strip(f"{wordy_choice},''")
+                # f5:: make the remaining numbers into an int
+                line = int(line)
+                # f5:: create a string composed of the name of the race and the time in mins & seconds
+                breakdown = f"{title.capitalize():15s} {line // 60} minutes, {line % 60 } seconds!"
+                print(breakdown)
 
 
 # main:: open the Races.txt file
