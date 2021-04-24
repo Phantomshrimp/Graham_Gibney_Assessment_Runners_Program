@@ -11,6 +11,8 @@ import runnerFunctions
 def print_banner():
     print('=' * 25)
 
+# ------------------ all functions called from main function: ---------------------------------------------------
+
 
 # main:: simple function to display the Main Menu only
 def display_menu():
@@ -32,86 +34,6 @@ def display_menu():
 def main_menu_choice():
     main_choice = runnerFunctions.get_choice_1_7("Please enter your choice: ")
     return main_choice
-
-
-# f2:: get the race venue from teh user
-def get_race_venue():
-    new_venue = input("Where was the race held: ").capitalize()
-    return new_venue
-
-
-# f2:: get the race times for the new venue
-def get_runner_times(runner_ids, new_venue, race_file_data):
-    print_banner()
-    print("Please enter the runner's time in seconds: ")
-    print("*** If a runner did not take part, please enter 0 as their time ***")
-    print_banner()
-    # a new file with the title of the venue is created
-    new_file = open("{}.txt".format(new_venue.lower()), 'w')
-    for i in range(len(runner_ids)):
-        times = int(input(f"Time for {runner_ids[i]}: "))
-        # once times are entered, any time > 0 is added to the file
-        if times != 0:
-            new_file.write(f"{runner_ids[i]},{times}\n")
-
-
-# f2:: check to see if the race has been recorded already
-def check_for_same_race(new_venue, race_list, runner_ids, race_file_data):
-    while True:
-        if new_venue in race_list:
-            print('A file already exists for this race')
-            new_venue = get_race_venue()
-        else:
-            # f2:: if the race has not been recorded
-            # print out the list of runners and get their times
-            get_runner_times(runner_ids, new_venue, race_file_data)
-            # f2:: if the race has not been recorded
-            # f2:: add that venue to the race_list
-            race_file_data.write(f'\n{new_venue}')
-            break
-
-
-# f3:: sort the runners by county and print out a table
-def sort_runners(runner_ids, runner_names):
-    cork = ""
-    kerry = ""
-    cork_initials = 'CK'
-    # f3:: iterate through the id list
-    for i in range(len(runner_ids)):
-        # f3:: if index contains 'CK' add it to the Cork string
-        if cork_initials in runner_ids[i]:
-            cork = cork + f"{runner_names[i]:10s} ({runner_ids[i]}) \n"
-        # f3:: otherwise add it to the Kerry string
-        else:
-            kerry = kerry + f"{runner_names[i]:10s} ({runner_ids[i]}) \n"
-    # f3:: table time!
-    print()
-    print("The Cork Runners are: ")
-    print_banner()
-    print(cork)
-    print("The Kerry Runners are: ")
-    print_banner()
-    print(kerry)
-
-
-def get_winners(race_list):
-    # the title of the file will be pulled from the race_list
-    # if the string in an index slot matches the string pulled from race_list
-    # then open that file
-    print()
-    print("Venue", ' ' * 5,  "Winner")
-    print_banner()
-    title = ''
-    for i in range(len(race_list)):
-        title = (race_list[i]).lower()
-        file = open("{}.txt".format(title))
-        # with the venue results open, split the two entries to runners and times
-        ids, times = split_races_two_lists(file)
-        # convert the seconds listed into minutes and seconds
-        winner = min(times)
-        for q in range(len(times)):
-            if times[q] == winner:
-                print(f"{title.capitalize():13s} {ids[q]}")
 
 
 # main:: pass the user's choice into this function to perform the relative menu action
@@ -141,78 +63,6 @@ def perform_main_choice(main_choice, race_list, runner_ids, race_file_data, runn
         get_all_winners(race_list, runner_names, runner_ids)
 
 
-# f6:: making use of the already split Races.txt and Runners.txt
-def get_all_winners(race_list, runner_names, runner_ids):
-    # f6:: get an empty list ready to catch the winners
-    winner_circle = []
-    # f6:: pull out the winning runned ID from every race
-    for i in range(len(race_list)):
-        # f5:: iterate through the race_list and open every file with a respective title
-        # recycling the already inputed split_races_two_lists function
-        title = (race_list[i]).lower()
-        file = open("{}.txt".format(title))
-        ids, times = split_races_two_lists(file)
-        winner = min(times)
-        for q in range(len(times)):
-            if times[q] == winner:
-                # f6:: getting something to reference in the ID and Names list
-                run_id = ids[q]
-                # f6:: iterate through the runner ids list with the winning id
-                for r in range(len(runner_ids)):
-                    if runner_ids[r] == run_id:
-                        # f6:: prep the list to print the format wanted to give the user
-                        winner_circle.append(f"{run_id} - {runner_names[r]} ({runner_ids[r]})")
-    # f6:: remove any duplicate winners
-    no_dupes_list = []
-    [no_dupes_list.append(x) for x in winner_circle if x not in no_dupes_list]
-    print()
-    print("Winners Circle:")
-    print_banner()
-    for d in range(len(no_dupes_list)):
-        print(no_dupes_list[d])
-
-
-def pick_a_racer(runner_names, runner_ids):
-    print("Choose a runner to see their times: ")
-    # f5:: start a count to display runners and a number to select them
-    count = 1
-    for i in range(len(runner_names)):
-        print(f"{count}. {runner_names[i]:15s} ({runner_ids[i]}) ")
-        count = count+1
-    choice = int(input("Runner: "))
-    # f5:: reset choice to 0 to iterate through a string
-    choice = choice - 1
-    # f5:: setting up a string to receive the runner ID
-    wordy_choice =""
-    for w in range(len(runner_ids)):
-        if w == choice:
-            wordy_choice = runner_ids[w]
-    return wordy_choice
-
-
-def check_presence(wordy_choice, race_list):
-    # the title of the file will be pulled from the race_list
-    # if the string in an index slot matches the string pulled from race_list
-    # then open that file
-    title = ''
-    print("Venue", " " * 9, "Time")
-    print_banner()
-    for i in range(len(race_list)):
-        # f5:: iterate through the race_list and open every file with a respective title
-        title = (race_list[i]).lower()
-        file = open("{}.txt".format(title))
-        # f5:: check whether or not the player id is in the file
-        for line in file:
-            if wordy_choice in line:
-                # f5:: if the id is in the file, strip everything but the seconds
-                line = line.strip(f"{wordy_choice},''")
-                # f5:: make the remaining numbers into an int
-                line = int(line)
-                # f5:: create a string composed of the name of the race and the time in mins & seconds
-                breakdown = f"{title.capitalize():15s} {line // 60} minutes, {line % 60 } seconds!"
-                print(breakdown)
-
-
 # main:: open the Races.txt file
 # pass the lines through to Make the files into a list function
 def read_venues(race_file):
@@ -229,6 +79,10 @@ def make_the_list(lines):
     for line in lines:
         race_list.append(line.rstrip())
     return race_list
+
+# ------------------------ end of functions called from Main  --------------------------------------------------
+
+# ↓-1-↓-1-↓-1-↓-1-↓-1-↓-1- ALL FUNCTIONS CALLED TO MAKE OPTION 1 TO WORK: --------------------------------------
 
 
 # f1:: split the Runners file into a  Names list and ID list
@@ -269,7 +123,9 @@ def choose_race(race_list):
     for i in range(len(race_list)):
         print(f"{num}. {race_list[i]}")
         num = num + 1
-    choice = runnerFunctions.get_integer_choice(f"Please enter a choice: ")
+    # resetting num to have correct max limit when a user makes a mistake
+    num = num - 1
+    choice = runnerFunctions.get_choice_1_count("Please enter a choice: ", num)
     return choice
 
 
@@ -305,6 +161,189 @@ def open_file(choice, race_list):
         if times[q] == winner:
             print(f"{ids[q]} won the race!")
 
+# ------------------------ end of functions called for function 1  ---------------------------------------------
+
+# ↓-2-↓-2-↓-2-↓-2-↓-2-↓-2- ALL FUNCTIONS CALLED TO MAKE OPTION 2 TO WORK: --------------------------------------
+
+
+# f2:: get the race venue from teh user
+def get_race_venue():
+    new_venue = runnerFunctions.get_non_empty_string("Where was the race held: ").capitalize()
+    return new_venue
+
+
+# f2:: get the race times for the new venue
+def get_runner_times(runner_ids, new_venue):
+    print_banner()
+    print("Please enter the runner's time in seconds: ")
+    print("*** If a runner did not take part, please enter 0 as their time ***")
+    print_banner()
+    # a new file with the title of the venue is created
+    new_file = open("{}.txt".format(new_venue.lower()), 'w')
+    for i in range(len(runner_ids)):
+        times = runnerFunctions.get_integer_choice(f"Time for {runner_ids[i]}: ")
+        # once times are entered, any time > 0 is added to the file
+        if times != 0:
+            new_file.write(f"{runner_ids[i]},{times}\n")
+
+
+# f2:: check to see if the race has been recorded already
+def check_for_same_race(new_venue, race_list, runner_ids, race_file_data):
+    while True:
+        if new_venue in race_list:
+            print('A file already exists for this race')
+            new_venue = get_race_venue()
+        else:
+            # f2:: if the race has not been recorded
+            # print out the list of runners and get their times
+            get_runner_times(runner_ids, new_venue)
+            # f2:: if the race has not been recorded
+            # f2:: add that venue to the race_list
+            race_file_data.write(f'\n{new_venue}')
+            break
+
+# ------------------------ end of functions called for function 2  ---------------------------------------------
+
+# ↓-3-↓-3-↓-3-↓-3-↓-3-↓-3- ALL FUNCTIONS CALLED TO MAKE OPTION 3 TO WORK: --------------------------------------
+
+
+# f3:: sort the runners by county and print out a table
+def sort_runners(runner_ids, runner_names):
+    cork = ""
+    kerry = ""
+    cork_initials = 'CK'
+    # f3:: iterate through the id list
+    for i in range(len(runner_ids)):
+        # f3:: if index contains 'CK' add it to the Cork string
+        if cork_initials in runner_ids[i]:
+            cork = cork + f"{runner_names[i]:10s} ({runner_ids[i]}) \n"
+        # f3:: otherwise add it to the Kerry string
+        else:
+            kerry = kerry + f"{runner_names[i]:10s} ({runner_ids[i]}) \n"
+    # f3:: table time!
+    print()
+    print("The Cork Runners are: ")
+    print_banner()
+    print(cork)
+    print("The Kerry Runners are: ")
+    print_banner()
+    print(kerry)
+
+# ------------------------ end of functions called for function 3  ---------------------------------------------
+
+# ↓-4-↓-4-↓-4-↓-4-↓-4-↓-4- ALL FUNCTIONS CALLED TO MAKE OPTION 4 TO WORK: --------------------------------------
+
+
+# f4:: Show the winner of each race
+def get_winners(race_list):
+    # the title of the file will be pulled from the race_list
+    # if the string in an index slot matches the string pulled from race_list
+    # then open that file
+    print()
+    print("Venue", ' ' * 5,  "Winner")
+    print_banner()
+    title = ''
+    for i in range(len(race_list)):
+        title = (race_list[i]).lower()
+        file = open("{}.txt".format(title))
+        # with the venue results open, split the two entries to runners and times
+        ids, times = split_races_two_lists(file)
+        # convert the seconds listed into minutes and seconds
+        winner = min(times)
+        for q in range(len(times)):
+            if times[q] == winner:
+                print(f"{title.capitalize():13s} {ids[q]}")
+
+# ------------------------ end of functions called for function 4  ---------------------------------------------
+
+# ↓-5-↓-5-↓-5-↓-5-↓-5-↓-5- ALL FUNCTIONS CALLED TO MAKE OPTION 5 TO WORK: --------------------------------------
+
+
+# f5:: Show all the race times for one competitor
+def pick_a_racer(runner_names, runner_ids):
+    print("Choose a runner to see their times: ")
+    # f5:: start a count to display runners and a number to select them
+    count = 1
+    for i in range(len(runner_names)):
+        print(f"{count}. {runner_names[i]:15s} ({runner_ids[i]}) ")
+        count = count + 1
+    # choice = int(input("Runner: "))
+    # resetting count to have proper limits when a choice is called for
+    count = count - 1
+    choice = runnerFunctions.get_choice_1_count("Runner: ", count)
+    # f5:: reset choice to 0 to iterate through a string
+    choice = choice - 1
+    # f5:: setting up a string to receive the runner ID
+    wordy_choice = ""
+    for w in range(len(runner_ids)):
+        if w == choice:
+            wordy_choice = runner_ids[w]
+    return wordy_choice
+
+
+# f5:: Show all the race times for one competitor
+def check_presence(wordy_choice, race_list):
+    # the title of the file will be pulled from the race_list
+    # if the string in an index slot matches the string pulled from race_list
+    # then open that file
+    title = ''
+    print()
+    print_banner()
+    print(wordy_choice)
+    print("Venue", " " * 9, "Time")
+    print_banner()
+    for i in range(len(race_list)):
+        # f5:: iterate through the race_list and open every file with a respective title
+        title = (race_list[i]).lower()
+        file = open("{}.txt".format(title))
+        # f5:: check whether or not the player id is in the file
+        for line in file:
+            if wordy_choice in line:
+                # f5:: if the id is in the file, strip everything but the seconds
+                line = line.strip(f"{wordy_choice},''")
+                # f5:: make the remaining numbers into an int
+                line = int(line)
+                # f5:: create a string composed of the name of the race and the time in mins & seconds
+                breakdown = f"{title.capitalize():15s} {line // 60} minutes, {line % 60 } seconds!"
+                print(breakdown)
+
+# ------------------------ end of functions called for function 5  ---------------------------------------------
+
+# ↓-6-↓-6-↓-6-↓-6-↓-6-↓-6- ALL FUNCTIONS CALLED TO MAKE OPTION 6 TO WORK: --------------------------------------
+
+
+# f6:: making use of the already split Races.txt and Runners.txt
+def get_all_winners(race_list, runner_names, runner_ids):
+    # f6:: get an empty list ready to catch the winners
+    winner_circle = []
+    # f6:: pull out the winning runned ID from every race
+    for i in range(len(race_list)):
+        # f5:: iterate through the race_list and open every file with a respective title
+        # recycling the already inputed split_races_two_lists function
+        title = (race_list[i]).lower()
+        file = open("{}.txt".format(title))
+        ids, times = split_races_two_lists(file)
+        winner = min(times)
+        for q in range(len(times)):
+            if times[q] == winner:
+                # f6:: getting something to reference in the ID and Names list
+                run_id = ids[q]
+                # f6:: iterate through the runner ids list with the winning id
+                for r in range(len(runner_ids)):
+                    if runner_ids[r] == run_id:
+                        # f6:: prep the list to print the format wanted to give the user
+                        winner_circle.append(f"{run_id} - {runner_names[r]} ({runner_ids[r]})")
+    # f6:: remove any duplicate winners
+    no_dupes_list = []
+    [no_dupes_list.append(x) for x in winner_circle if x not in no_dupes_list]
+    print()
+    print("Winners Circle:")
+    print_banner()
+    for d in range(len(no_dupes_list)):
+        print(no_dupes_list[d])
+
+# ------------------------ end of functions called for function 6  ---------------------------------------------
+
 
 # main:: the main function to hold all separate functions
 def main():
@@ -333,11 +372,7 @@ def main():
 if __name__ == '__main__':
     main()
 
-# TODO: confirm all functions are working correctly
-# TODO: trim the program but splitting large functions into smaller functions
-# TODO: move repeated functions into the useful_functions holder
-# TODO: add validation where missing, some user choices need to be customized
-# TODO: check comments
-# TODO: accurately place todos to be functional
+
+# TODO: trim the program but splitting large functions into smaller functionss
 # TODO: add first of x when showing the winner of each race (option 4)
 # TODO: close files

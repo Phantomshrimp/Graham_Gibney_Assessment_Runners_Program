@@ -7,7 +7,7 @@ def get_non_empty_string(prompt):
             if len(choice) != 0:
                 break
         except:
-            print("Value Error: Wrong Datatype")
+            print("Value Error: Wrong Datatype - Needs Letters!")
     return choice
 
 
@@ -19,7 +19,7 @@ def get_integer_choice(prompt):
             if choice >= 0:
                 break
         except:
-            print("Value Error: Wrong Datatype")
+            print("Value Error: Wrong Datatype - Needs Numbers!")
     return choice
 
 
@@ -34,20 +34,20 @@ def get_choice_1_7(prompt):
             else:
                 print("Please enter a choice that is between 1 and 7 inclusive!")
         except:
-            print("Value Error: Wrong Datatype")
+            print("Value Error: Wrong Datatype - Needs Numbers!")
     return choice
 
 
-# specifically designed to get a choice from the main menu
-# 2 choices
-def get_choice_1_2(prompt):
+# designed to be used with flexibility
+# will put the max limit based on the number passed in
+def get_choice_1_count(prompt, num):
     while True:
         try:
             choice = int(input(prompt))
-            if 1 <= choice <= 2:
+            if 1 <= choice <= num:
                 break
             else:
-                print("Please enter a choice that is either 1 and 2")
+                print(f"Please enter a choice that is between 1 and {num} inclusive!")
         except:
-            print("Value Error: Wrong Datatype")
+            print("Value Error: Wrong Datatype - Needs Numbers!")
     return choice
