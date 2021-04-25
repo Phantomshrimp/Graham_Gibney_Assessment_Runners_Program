@@ -199,7 +199,9 @@ def check_for_same_race(new_venue, race_list, runner_ids, race_file_data):
             get_runner_times(runner_ids, new_venue)
             # f2:: if the race has not been recorded
             # f2:: add that venue to the race_list
+            # it is no available immediately to the main menu
             race_list.append(new_venue)
+            # update the race file with the name of the new venue
             race_file_data.write(f'\n{new_venue}')
             break
 
@@ -242,7 +244,7 @@ def get_winners(race_list):
     # if the string in an index slot matches the string pulled from race_list
     # then open that file
     print()
-    print("Venue", ' ' * 5,  "Winner")
+    print("Venue", ' ' * 10,  "Winner")
     print_banner()
     title = ''
     for i in range(len(race_list)):
@@ -254,7 +256,7 @@ def get_winners(race_list):
         winner = min(times)
         for q in range(len(times)):
             if times[q] == winner:
-                print(f"{title.capitalize():13s} {ids[q]}")
+                print(f"{title.capitalize():<20} {ids[q]:>4}")
 
 # ------------------------ end of functions called for function 4  ---------------------------------------------
 
@@ -272,7 +274,8 @@ def pick_a_racer(runner_names, runner_ids):
     # choice = int(input("Runner: "))
     # resetting count to have proper limits when a choice is called for
     count = count - 1
-    choice = runnerFunctions.get_choice_1_count("Runner: ", count)
+    print('-' * 40)
+    choice = runnerFunctions.get_choice_1_count("Enter your runner here: ", count)
     # f5:: reset choice to 0 to iterate through a string
     choice = choice - 1
     # f5:: setting up a string to receive the runner ID
@@ -285,29 +288,41 @@ def pick_a_racer(runner_names, runner_ids):
 
 # f5:: Show all the race times for one competitor
 def check_presence(wordy_choice, race_list):
-    # the title of the file will be pulled from the race_list
-    # if the string in an index slot matches the string pulled from race_list
-    # then open that file
+    # set an empty string to catch the title of a venue
     title = ''
+    # set an empty string to start building the results
+    results = ''
+    # decoration
     print()
     print_banner()
-    print(wordy_choice)
-    print("Venue", " " * 9, "Time")
+    print(wordy_choice, "Results:")
     print_banner()
+    print(f"{'Venue':20s} {'Time':20s} {'Place':>25s}")
+    print('-' * 50)
+    # iterate through the race list and open a file for each entry in the list
     for i in range(len(race_list)):
-        # f5:: iterate through the race_list and open every file with a respective title
         title = (race_list[i]).lower()
         file = open("{}.txt".format(title))
-        # f5:: check whether or not the player id is in the file
-        for line in file:
-            if wordy_choice in line:
-                # f5:: if the id is in the file, strip everything but the seconds
-                line = line.strip(f"{wordy_choice},''")
-                # f5:: make the remaining numbers into an int
-                line = int(line)
-                # f5:: create a string composed of the name of the race and the time in mins & seconds
-                breakdown = f"{title.capitalize():15s} {line // 60} minutes, {line % 60 } seconds!"
-                print(breakdown)
+        # split the file into 2 lists, runner id and time
+        ids, times = split_races_two_lists(file)
+        # iterate through the id list / check if the chosen runner id is in the list
+        # if it is in the list, start building the results
+        for codes in range(len(ids)):
+            if ids[codes] == wordy_choice:
+                results = f"{title.capitalize():20s} {times[codes] // 60} mins {times[codes] % 60} seconds"
+                # get the time ran by the runner here
+                time_ran = times[codes]
+                # sort the times list
+                times.sort()
+                # find where in the list the time comes / make the place out of the number of entries
+                for t in range(len(times)):
+                    if times[t] == time_ran:
+                        index = times.index(time_ran)
+                        index = index + 1
+                        placed = f" ({index} out of {len(times)})"
+                        # combine everything together, results and place and print to screen
+                        results =(f"{results:25s}" + f"{placed:>25s}")
+                print(results)
 
 # ------------------------ end of functions called for function 5  ---------------------------------------------
 
@@ -373,8 +388,3 @@ def main():
 # main function
 if __name__ == '__main__':
     main()
-
-
-# TODO: trim the program but splitting large functions into smaller functionss
-# TODO: add first of x when showing the winner of each race (option 4)
-# TODO: close files
