@@ -244,7 +244,7 @@ def get_winners(race_list):
     # if the string in an index slot matches the string pulled from race_list
     # then open that file
     print()
-    print("Venue", ' ' * 10,  "Winner")
+    print("Venue", ' ' * 9,  "Winner")
     print_banner()
     title = ''
     for i in range(len(race_list)):
@@ -256,7 +256,7 @@ def get_winners(race_list):
         winner = min(times)
         for q in range(len(times)):
             if times[q] == winner:
-                print(f"{title.capitalize():<20} {ids[q]:>4}")
+                print(f"{title.capitalize():15} {ids[q]:5}")
 
 # ------------------------ end of functions called for function 4  ---------------------------------------------
 
@@ -297,7 +297,7 @@ def check_presence(wordy_choice, race_list):
     print_banner()
     print(wordy_choice, "Results:")
     print_banner()
-    print(f"{'Venue':20s} {'Time':20s}")
+    print(f"{'Venue':15s} {'Time':20s}")
     print('-' * 50)
     # iterate through the race list and open a file for each entry in the list
     for i in range(len(race_list)):
@@ -309,7 +309,7 @@ def check_presence(wordy_choice, race_list):
         # if it is in the list, start building the results
         for codes in range(len(ids)):
             if ids[codes] == wordy_choice:
-                results = f"{title.capitalize():20s} {times[codes] // 60} mins {times[codes] % 60} seconds"
+                results = f"{title.capitalize():15s} {times[codes] // 60} mins {times[codes] % 60} seconds"
                 # get the time ran by the runner here
                 time_ran = times[codes]
                 # sort the times list
@@ -321,7 +321,7 @@ def check_presence(wordy_choice, race_list):
                         index = index + 1
                         placed = f" ({index} out of {len(times)})"
                         # combine everything together, results and place and print to screen
-                        results =(f"{results:25s}" + f"{placed:>5s}")
+                        results =(f"{results:5s}" + f"{placed:>5s}")
                 print(results)
 
 # ------------------------ end of functions called for function 5  ---------------------------------------------
