@@ -199,8 +199,10 @@ def check_for_same_race(new_venue, race_list, runner_ids, race_file_data):
             get_runner_times(runner_ids, new_venue)
             # f2:: if the race has not been recorded
             # f2:: add that venue to the race_list
+            race_list.append(new_venue)
             race_file_data.write(f'\n{new_venue}')
             break
+
 
 # ------------------------ end of functions called for function 2  ---------------------------------------------
 
